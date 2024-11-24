@@ -4,6 +4,7 @@ import { generateMnemonic } from "bip39";
 import { SolanaWallet } from './SolanaWallet';
 import Navbar from './Navbar';
 import { KeyIcon, AlertTriangle, EyeIcon, EyeOffIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [mnemonic, setMnemonic] = useState("");
@@ -131,6 +132,7 @@ function App() {
           {mnemonic && <SolanaWallet mnemonic={mnemonic} />}
         </div>
       </main>
+      <Analytics />
     </div>
   );
 }
