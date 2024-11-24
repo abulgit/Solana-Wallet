@@ -21,7 +21,7 @@ function Navbar() {
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-zinc-200 bg-white/75 backdrop-blur-lg supports-[backdrop-filter]:bg-white/60 dark:border-zinc-800 dark:bg-zinc-900/75 supports-[backdrop-filter]:dark:bg-zinc-900/60">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 p-1.5 shadow-lg shadow-purple-500/20 dark:from-purple-600 dark:to-indigo-600">
             <svg 
