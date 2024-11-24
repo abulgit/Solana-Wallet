@@ -1,16 +1,54 @@
-// SolanaWallet.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mnemonicToSeed } from "bip39";
 import { derivePath } from "ed25519-hd-key";
 import { Keypair } from "@solana/web3.js";
 import nacl from "tweetnacl";
-import { PlusIcon, CopyIcon, CheckIcon, Wallet, ExternalLinkIcon } from 'lucide-react';
+import { PlusIcon, CopyIcon, CheckIcon, Wallet, ExternalLinkIcon, TrashIcon } from 'lucide-react';
 
 export function SolanaWallet({ mnemonic }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [publicKeys, setPublicKeys] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    return parseInt(localStorage.getItem('solana_current_index') || '0');
+  });
+  const [publicKeys, setPublicKeys] = useState(() => {
+    const saved = localStorage.getItem('solana_public_keys');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [copying, setCopying] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Update localStorage when publicKeys or currentIndex changes
+  useEffect(() => {
+    localStorage.setItem('solana_public_keys', JSON.stringify(publicKeys));
+    localStorage.setItem('solana_current_index', currentIndex.toString());
+  }, [publicKeys, currentIndex]);
+
+  // Initialize wallets from localStorage when mnemonic changes
+  useEffect(() => {
+    const initializeWallets = async () => {
+      if (mnemonic && publicKeys.length === 0) {
+        setLoading(true);
+        try {
+          const savedIndex = parseInt(localStorage.getItem('solana_current_index') || '0');
+          const wallets = [];
+          
+          for (let i = 0; i < savedIndex; i++) {
+            const seed = await mnemonicToSeed(mnemonic);
+            const path = `m/44'/501'/${i}'/0'`;
+            const derivedSeed = derivePath(path, seed.toString("hex")).key;
+            const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
+            const keypair = Keypair.fromSecretKey(secret);
+            wallets.push(keypair.publicKey.toString());
+          }
+          
+          setPublicKeys(wallets);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    initializeWallets();
+  }, [mnemonic]);
 
   const handleCopy = async (address) => {
     await navigator.clipboard.writeText(address);
@@ -29,10 +67,17 @@ export function SolanaWallet({ mnemonic }) {
       const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
       const keypair = Keypair.fromSecretKey(secret);
       setCurrentIndex(currentIndex + 1);
-      setPublicKeys([...publicKeys, keypair.publicKey]);
+      setPublicKeys([...publicKeys, keypair.publicKey.toString()]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const deleteWallet = (index) => {
+    const newPublicKeys = [...publicKeys];
+    newPublicKeys.splice(index, 1);
+    setPublicKeys(newPublicKeys);
+    // Note: We don't decrease currentIndex to maintain derivation path consistency
   };
 
   const openExplorer = (address) => {
@@ -69,7 +114,7 @@ export function SolanaWallet({ mnemonic }) {
 
         <div className="mt-6 space-y-2">
           {publicKeys.map((publicKey, index) => {
-            const address = publicKey.toBase58();
+            const address = publicKey.toString();
             return (
               <div
                 key={index}
@@ -108,6 +153,13 @@ export function SolanaWallet({ mnemonic }) {
                       <CopyIcon className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
                     )}
                   </button>
+                  <button
+                    onClick={() => deleteWallet(index)}
+                    className="rounded-md p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors duration-200 text-red-500 hover:text-red-600"
+                    title="Delete wallet"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             );
@@ -131,3 +183,5 @@ export function SolanaWallet({ mnemonic }) {
     </div>
   );
 }
+
+export default SolanaWallet;
