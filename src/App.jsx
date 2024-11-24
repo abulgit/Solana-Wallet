@@ -1,25 +1,15 @@
-import { useState, useEffect } from 'react';
+// App.jsx
+import { useState } from 'react';
 import { generateMnemonic } from "bip39";
 import { SolanaWallet } from './SolanaWallet';
 import Navbar from './Navbar';
-import { KeyIcon, ShieldCheck, AlertTriangle, EyeIcon, EyeOffIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { KeyIcon, AlertTriangle, EyeIcon, EyeOffIcon, CopyIcon, CheckIcon } from 'lucide-react';
 
 function App() {
-  const [mnemonic, setMnemonic] = useState(() => {
-    // Initialize mnemonic from localStorage if it exists
-    return localStorage.getItem('solana_mnemonic') || "";
-  });
+  const [mnemonic, setMnemonic] = useState("");
   const [showSecurity, setShowSecurity] = useState(false);
   const [showSeedPhrase, setShowSeedPhrase] = useState(true);
   const [copying, setCopying] = useState(false);
-
-  // Update localStorage whenever mnemonic changes
-  useEffect(() => {
-    if (mnemonic) {
-      localStorage.setItem('solana_mnemonic', mnemonic);
-      setShowSecurity(true);
-    }
-  }, [mnemonic]);
 
   const handleGenerateMnemonic = () => {
     const newMnemonic = generateMnemonic();
