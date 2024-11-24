@@ -11,8 +11,7 @@ export function SolanaWallet({ mnemonic }) {
   const [publicKeys, setPublicKeys] = useState([]);
   const [copying, setCopying] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // Reset wallet state when mnemonic changes
+  
   useEffect(() => {
     setPublicKeys([]);
     setCurrentIndex(0);

@@ -117,8 +117,6 @@ function App() {
                     </div>
                   </div>
                 )}
-
-                {/* Generate Button */}
                 <button
                   onClick={handleGenerateMnemonic}
                   className="w-full rounded-md bg-zinc-900 dark:bg-zinc-50 px-4 py-2.5 text-sm font-medium text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 focus:ring-opacity-20 dark:focus:ring-opacity-20 transition-colors duration-200"
