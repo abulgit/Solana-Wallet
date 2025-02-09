@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   }, [isDarkMode]);
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-zinc-100 bg-white/90 backdrop-blur-lg dark:border-zinc-800 dark:bg-zinc-900/90">
+    <nav className="fixed top-0 z-50 w-full border-b border-zinc-100 bg-white/90 backdrop-blur-lg dark:border-zinc-800 dark:bg-zinc-950/50">
       <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center rounded-lg bg-zinc-900 p-2 dark:bg-zinc-50">
