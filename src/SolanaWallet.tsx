@@ -1,4 +1,4 @@
-// SolanaWallet.jsx
+// SolanaWallet.tsx
 import { useState, useEffect } from "react";
 import { mnemonicToSeed } from "bip39";
 import { derivePath } from "ed25519-hd-key";
@@ -6,19 +6,23 @@ import { Keypair } from "@solana/web3.js";
 import nacl from "tweetnacl";
 import { PlusIcon, CopyIcon, CheckIcon, Wallet, ExternalLinkIcon, TrashIcon } from 'lucide-react';
 
-export function SolanaWallet({ mnemonic }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [publicKeys, setPublicKeys] = useState([]);
-  const [copying, setCopying] = useState({});
-  const [loading, setLoading] = useState(false);
-  
+interface SolanaWalletProps {
+  mnemonic: string;
+}
+
+export function SolanaWallet({ mnemonic }: SolanaWalletProps) {
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [publicKeys, setPublicKeys] = useState<string[]>([]);
+  const [copying, setCopying] = useState<{ [key: string]: boolean }>({});
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     setPublicKeys([]);
     setCurrentIndex(0);
     setLoading(false);
   }, [mnemonic]);
 
-  const handleCopy = async (address) => {
+  const handleCopy = async (address: string) => {
     await navigator.clipboard.writeText(address);
     setCopying((prev) => ({ ...prev, [address]: true }));
     setTimeout(() => {
@@ -28,7 +32,7 @@ export function SolanaWallet({ mnemonic }) {
 
   const generateWallet = async () => {
     if (!mnemonic) return;
-    
+
     setLoading(true);
     try {
       const seed = await mnemonicToSeed(mnemonic);
@@ -36,9 +40,9 @@ export function SolanaWallet({ mnemonic }) {
       const derivedSeed = derivePath(path, seed.toString("hex")).key;
       const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
       const keypair = Keypair.fromSecretKey(secret);
-      
-      setCurrentIndex(prev => prev + 1);
-      setPublicKeys(prev => [...prev, keypair.publicKey.toString()]);
+
+      setCurrentIndex((prev) => prev + 1);
+      setPublicKeys((prev) => [...prev, keypair.publicKey.toString()]);
     } catch (error) {
       console.error("Error generating wallet:", error);
     } finally {
@@ -46,11 +50,11 @@ export function SolanaWallet({ mnemonic }) {
     }
   };
 
-  const deleteWallet = (index) => {
-    setPublicKeys(prev => prev.filter((_, idx) => idx !== index));
+  const deleteWallet = (index: number) => {
+    setPublicKeys((prev) => prev.filter((_, idx) => idx !== index));
   };
 
-  const openExplorer = (address) => {
+  const openExplorer = (address: string) => {
     window.open(`https://explorer.solana.com/address/${address}`, '_blank');
   };
 
@@ -101,7 +105,7 @@ export function SolanaWallet({ mnemonic }) {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-1 justify-end sm:justify-start">
                 <button
                   onClick={() => openExplorer(address)}
