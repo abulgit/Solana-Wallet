@@ -39,7 +39,17 @@ const App: React.FC = () => {
       <Navbar />
       <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          {showSecurity && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-medium text-zinc-900 dark:text-zinc-100">
+                Secure Wallet Generator
+              </h1>
+              <p className="text-zinc-600 dark:text-zinc-400">
+                Create a new Solana wallet with cryptographically secure seed phrase
+              </p>
+            </div>
+
+            {showSecurity && (
             <div className="animate-fade-in p-4 rounded-xl border border-amber-200/80 bg-gradient-to-br from-amber-50/50 to-amber-50 dark:from-amber-900/10 dark:to-amber-900/20 dark:border-amber-900/30 shadow-sm">
               <div className="flex items-start gap-3.5">
                 <div className="flex-shrink-0">
@@ -66,16 +76,6 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
-
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-medium text-zinc-900 dark:text-zinc-100">
-                Secure Wallet Generator
-              </h1>
-              <p className="text-zinc-600 dark:text-zinc-400">
-                Create a new Solana wallet with cryptographically secure seed phrase
-              </p>
-            </div>
 
             <div className="space-y-5">
               {mnemonic && (
